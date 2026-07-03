@@ -1,0 +1,214 @@
+NEOVIM PLUGIN QUICK REFERENCE
+==============================
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SURROUND  (mini.surround — already installed)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Add, delete, and replace surrounding characters (brackets, quotes, tags, etc.)
+
+  sa{motion}{char}   Add surround
+  sd{char}           Delete surround
+  sr{old}{new}       Replace surround
+  sf{char}           Find surrounding (jump to it)
+  sh{char}           Highlight surrounding
+
+Examples:
+  saiw)    Surround inner word with ()  →  word becomes (word)
+  saiw"    Surround inner word with ""  →  word becomes "word"
+  sd"      Delete surrounding "         →  "hello" becomes hello
+  sr)"     Replace ) with "             →  (hello) becomes "hello"
+  sa2aw[   Surround 2 words with []     →  foo bar becomes [foo bar]
+
+Note: mini.surround uses sa/sd/sr. Classic vim-surround uses ys/ds/cs.
+The behavior is identical, only the keybindings differ.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VIM-FUGITIVE  (tpope/vim-fugitive)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Git inside Neovim. The main entry point is :G (short for :Git).
+
+  :G                 Open git status buffer
+  :G commit          Commit (opens a split for the message)
+  :G push            Push
+  :G pull            Pull
+  :G diff            Diff current file against HEAD
+  :G blame           Inline blame for every line of the current file
+  :G log             Git log
+  :G log %           Git log for current file only
+
+Inside the :G status buffer:
+  s                  Stage file/hunk under cursor
+  u                  Unstage file/hunk
+  =                  Toggle inline diff for file under cursor
+  cc                 Commit staged changes
+  dd                 Open diff for file under cursor
+  Enter              Open file under cursor
+  q                  Close the status buffer
+
+Diff workflow:
+  :Gdiffsplit        Opens a 3-way split for merge conflicts
+  ]c / [c            Jump between diff hunks
+  dp                 "diff put" — push hunk to other side
+  do                 "diff obtain" — pull hunk from other side
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HARPOON 2  (ThePrimeagen/harpoon)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+A persistent pinned-file list. Add up to ~4 files you're actively working
+in, then jump between them instantly. Faster than fuzzy-finding when you're
+context-switching within the same set of files all day.
+
+Keybinds (configured in init.lua):
+  <leader>a          Add current file to harpoon list
+  <leader>e          Open harpoon quick menu
+  <leader>1          Jump to slot 1
+  <leader>2          Jump to slot 2
+  <leader>3          Jump to slot 3
+  <leader>4          Jump to slot 4
+
+Inside the harpoon menu:
+  Enter              Jump to file under cursor
+  d                  Remove file from list
+  q / Esc            Close menu
+
+Typical workflow:
+  1. Open the 3-4 files you're working across
+  2. Hit <leader>a in each to pin them
+  3. Use <leader>1-4 to jump between them
+  4. <leader>e to reorder or remove entries
+
+Note: harpoon works per-project (per git root). Your list is saved
+automatically and restored next session.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FZF-LUA  (ibhagwan/fzf-lua)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Fuzzy finder backed by fzf. Type partial characters and it finds matches
+across files, content, buffers, LSP symbols, etc.
+
+Search keybinds (Space = leader):
+  <leader>sf         Find files in project
+  <leader>sg         Live grep (search file contents)
+  <leader>sw         Grep word under cursor
+  <leader>s/         Live grep in open buffers only
+  <leader>sh         Search help tags
+  <leader>sk         Search keymaps
+  <leader>sc         Search commands
+  <leader>sd         Search diagnostics (errors/warnings)
+  <leader>s.         Recent files
+  <leader>sr         Resume last search
+  <leader>sn         Search files in nvim config
+  <leader>ss         List all fzf-lua pickers
+  <leader><leader>   Switch between open buffers
+  <leader>/          Fuzzy search inside current buffer
+
+LSP pickers (active when an LSP is attached):
+  grr                Find all references to symbol under cursor
+  grd                Go to definition
+  gri                Go to implementation
+  grt                Go to type definition
+  gO                 List all symbols in current file
+  gW                 List all symbols in workspace
+
+Inside any fzf-lua picker:
+  Type               Filter results (fuzzy)
+  Ctrl-j / Ctrl-k    Move up/down in results
+  Enter              Open selected
+  Ctrl-x             Open in horizontal split
+  Ctrl-v             Open in vertical split
+  Ctrl-t             Open in new tab
+  Esc / Ctrl-c       Close picker
+  Ctrl-/             Toggle preview
+  Tab                Multi-select (where supported)
+
+Tips:
+  - <leader>sg then Ctrl-g to toggle between grep and fuzzy on results
+  - <leader>sr to reopen your last search without retyping
+  - fzf supports extended syntax: prefix with ' for exact match,
+    ^ to anchor at start, $ to anchor at end, ! to negate
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INDENT DETECTION  (guess-indent.nvim — already installed)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Equivalent to vim-sleuth. Automatically reads each file and sets
+expandtab, shiftwidth, and tabstop to match. Silent — no interaction needed.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ALSO INCLUDED IN KICKSTART (good to know)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+gitsigns.nvim    — git change indicators in the gutter (+ ~ _ symbols).
+                   Also adds hunk navigation: ]h / [h to jump between hunks,
+                   <leader>hs to stage a hunk, <leader>hr to reset it.
+
+which-key.nvim   — after pressing a prefix key (like <leader>), shows a
+                   popup listing all available continuations. Useful while
+                   learning keybinds.
+
+mini.ai          — smarter text objects. `ci'` to change inside quotes,
+                   `da)` to delete around parens, etc. Also adds "next"
+                   variants: `an(` selects around the next paren.
+
+todo-comments    — highlights TODO, FIXME, NOTE, HACK, etc. in comments.
+                   <leader>st to search all TODOs in the project (via fzf-lua).
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RANDOM VIM SHIT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Since you found Ctrl-a, the natural companion is Ctrl-x (decrement), and the one most people never discover: 
+in visual block mode, select a column of numbers and hit g Ctrl-a — it turns them into an incrementing sequence 
+(1, 2, 3, …) rather than adding the same amount to each. 
+Prefix with a count (5g Ctrl-a) to set the step. 
+Worth knowing that Ctrl-a reads the number format according to the 'nrformats' option, so 0x1f increments in hex; 
+the classic gotcha is that if octal is enabled, 007 becomes 010 (octal 8), not 008.
+
+A few clusters beyond vimtutor that tend to be high-leverage:
+Text objects. Probably the biggest gap if you only did vimtutor. Operators combine with i (inner) and a (a/around): 
+ci( changes inside parens, ci" inside quotes, dap deletes a paragraph, dit/cit work on HTML/XML tag contents, 
+vi{ selects a block body. The cursor doesn't even need to be on the delimiter for the bracket/quote ones — 
+Vim searches the line. This is the thing that makes editing feel structural rather than character-by-character.
+
+The dot command and its discipline. . repeats your last change. The skill is structuring edits so . is repeatable — 
+e.g. cwfoo<Esc> then n. n. to fix the same word across matches. Pairs with * (search for word under cursor) and 
+# (search backward).
+
+The global command. :g/pattern/cmd runs an Ex command on every matching line. 
+:g/TODO/d deletes all lines containing TODO; :v/pattern/d (or :g!) does the inverse — keep only matching lines. 
+Combine with :normal: :g/^/normal A; appends a semicolon to every line. This is closer to sed than to editing.
+Marks and jumps. ` jumps back to where you were before the last jump, . `` goes to the last edit, 
+gi re-enters insert mode exactly where you last left it. 
+Ctrl-o and Ctrl-i walk backward/forward through the jump list; g; and g,` walk the change list.
+
+Registers worth knowing. 
+"0 always holds your last yank (unaffected by deletes, which clobber the unnamed register), 
+so "0p pastes what you yanked even after deleting something else. 
+In insert or command-line mode, Ctrl-r followed by a register name pastes it; 
+Ctrl-r Ctrl-w pulls the word under the cursor into the command line — handy for building substitutions.
+
+Case and formatting operators. gUiw uppercases a word, guu lowercases a line, g~ toggles. 
+= reindents (=ip reindents a paragraph), gq reflows text to 'textwidth'.
+
+Visual block insert. Ctrl-v to select a vertical block, then I or A to type, Esc, and the text propagates to every 
+line — the manual way to do what g Ctrl-a automates for numbers.
+
+The command-line window. q: opens your Ex command history as an editable buffer where normal motions work; 
+q/ does the same for search history. You edit a past command and press Enter to run it.
+
+Time-travel undo. :earlier 5m / :later 30s move through undo by time, and g-/g+ walk the undo tree's branches, which the linear u/Ctrl-r can't reach.
+
+Smaller ones that pay off constantly: zz/zt/zb (scroll current line to center/top/bottom), 
+gv (reselect last visual selection), J/gJ (join lines, with/without inserted space), ddp (transpose two lines), 
+and f/t with ;/, to repeat the find.
+
+If you want a rabbit hole, :help motion.txt, :help text-objects, and :help registers are the dense reference pages — 
+and :help Ctrl-A to confirm the 'nrformats' behavior on your specific build, 
+since the default set has shifted across Vim versions.
+
+
