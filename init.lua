@@ -381,8 +381,22 @@ do
   -- Change the name of the colorscheme plugin below, and then
   -- change the command under that to load whatever the name of that colorscheme is.
   --
-  -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-  vim.pack.add { gh 'folke/tokyonight.nvim' }
+  -- To browse and live-preview every installed colorscheme, run `:FzfLua colorschemes`.
+  --
+  -- Several themes are installed below so they all show up in that picker. Only the
+  -- final `vim.cmd.colorscheme` call decides which one loads by default.
+  --  NOTE: a plugin's repo name is usually NOT its colorscheme name (see each line).
+  vim.pack.add { gh 'catppuccin/nvim' } -- colorschemes: catppuccin-mocha/-macchiato/-frappe/-latte
+  vim.pack.add { gh 'folke/tokyonight.nvim' } -- tokyonight-night/-storm/-moon/-day
+  vim.pack.add { gh 'rebelot/kanagawa.nvim' } -- kanagawa-wave/-dragon/-lotus
+  vim.pack.add { gh 'rose-pine/neovim' } -- rose-pine/-moon/-dawn
+  vim.pack.add { gh 'Mofiqul/dracula.nvim' } -- dracula
+
+  -- Theme-specific configuration. `require('<plugin>').setup {}` must run before the
+  -- matching colorscheme is loaded (catppuccin/kanagawa build their highlights here).
+  require('catppuccin').setup {
+    no_italic = true, -- Disable italics (matches the tokyonight tweak below)
+  }
   ---@diagnostic disable-next-line: missing-fields
   require('tokyonight').setup {
     styles = {
@@ -390,10 +404,9 @@ do
     },
   }
 
-  -- Load the colorscheme here.
-  -- Like many other themes, this one has different styles, and you could load
-  -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-  vim.cmd.colorscheme 'tokyonight-storm'
+  -- Load the default colorscheme here. Swap this string for any name listed above
+  -- (or pick live with `:FzfLua colorschemes`) to change your default.
+  vim.cmd.colorscheme 'tokyonight-moon'
 
   -- Highlight todo, notes, etc in comments
   vim.pack.add { gh 'folke/todo-comments.nvim' }
@@ -642,12 +655,9 @@ do
           },
           workspace = {
             checkThirdParty = false,
-            -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
-            --  See https://github.com/neovim/nvim-lspconfig/issues/3189
-            library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
-              '${3rd}/luv/library',
-              '${3rd}/busted/library',
-            }),
+            -- Library types are supplied on-demand by lazydev.nvim (configured in the
+            -- LSP plugin block above). Loading the whole runtime here is what made
+            -- editing your own config crawl. See nvim-lspconfig issue #3189.
           },
         })
       end,
@@ -665,6 +675,18 @@ do
     gh 'mason-org/mason.nvim',
     gh 'mason-org/mason-lspconfig.nvim',
     gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
+    -- Loads Neovim/plugin Lua type definitions on-demand so `lua_ls` stays fast
+    -- when editing your config (instead of preloading the entire runtime).
+    gh 'folke/lazydev.nvim',
+  }
+
+  -- Configure `lua_ls` for editing Neovim config: pulls in library types only for
+  -- modules you actually `require`. Must run before `lua_ls` is enabled below.
+  require('lazydev').setup {
+    library = {
+      -- Load luvit types when the `vim.uv` word is found
+      { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+    },
   }
 
   -- Automatically install LSPs and related tools to stdpath for Neovim

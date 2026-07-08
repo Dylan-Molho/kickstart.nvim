@@ -164,8 +164,8 @@ RANDOM VIM SHIT
 
 Since you found Ctrl-a, the natural companion is Ctrl-x (decrement), and the one most people never discover: 
 in visual block mode, select a column of numbers and hit g Ctrl-a — it turns them into an incrementing sequence 
-(1, 2, 3, …) rather than adding the same amount to each. 
-Prefix with a count (5g Ctrl-a) to set the step. 
+(1, 2, 3, …) rather than adding the same amount to each.
+Prefix with a count (5g Ctrl-a) to set the step.
 Worth knowing that Ctrl-a reads the number format according to the 'nrformats' option, so 0x1f increments in hex; 
 the classic gotcha is that if octal is enabled, 007 becomes 010 (octal 8), not 008.
 
